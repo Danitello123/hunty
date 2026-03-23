@@ -111,6 +111,7 @@ export function PlayGame({
   }, [huntId]);
 
   const hunts = fetchedClues ?? huntsProp;
+  const solvedCount = solvedClues.size;
 
   const handleScoreUpdate = (points: number) => {
     setScore((prev) => prev + points);
