@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { X, ArrowRight, Trophy } from "lucide-react"
 import { Card, CardDescription, CardTitle } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Header } from "@/components/Header"
 import { getAllHunts } from "@/lib/huntStore"
 import { LeaderboardTable } from "@/components/LeaderBoardTable"
@@ -235,15 +236,20 @@ export default function GameArcade() {
           {isLoadingHunts ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {Array.from({ length: 4 }).map((_, idx) => (
-                <div
+                <Card
                   key={idx}
-                  className="rounded-2xl border border-slate-200 bg-slate-100/60 p-4 animate-pulse space-y-3"
+                  className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
                 >
-                  <div className="h-5 w-3/4 bg-slate-200 rounded" />
-                  <div className="h-3 w-full bg-slate-200 rounded" />
-                  <div className="h-3 w-5/6 bg-slate-200 rounded" />
-                  <div className="h-4 w-24 bg-slate-300 rounded-full mt-4" />
-                </div>
+                  <div className="p-5">
+                    <Skeleton className="h-6 w-3/4 mb-2" />
+                    <Skeleton className="h-4 w-full mb-1" />
+                    <Skeleton className="h-4 w-5/6 mb-4" />
+                    <div className="flex items-center justify-between mt-4">
+                      <Skeleton className="h-6 w-20 rounded-full" />
+                      <Skeleton className="h-4 w-12" />
+                    </div>
+                  </div>
+                </Card>
               ))}
             </div>
           ) : hunts.length === 0 ? (

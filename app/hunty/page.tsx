@@ -3,6 +3,7 @@
 import { ReactNode, useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
+import { useLocalStorage } from "@/hooks/useLocalStorage"
 
 import { z } from "zod"
 import { createHunt } from "@/lib/contracts/hunt"
