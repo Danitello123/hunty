@@ -50,7 +50,7 @@ export function PlayGame({
   const solvedCount = solvedClues.size;
 
   const {
-    data: huntData = null,
+    data: fetchedClues = null,
     isLoading: loading,
     error: queryError,
     refetch,
@@ -74,13 +74,11 @@ export function PlayGame({
           hintCost: clue.hintCost,
         });
       }
-      return { clues, metadata: huntInfo };
+      return clues;
     },
     enabled: huntId != null,
   });
 
-  const fetchedClues = huntData?.clues ?? null;
-  const huntMetadata = huntData?.metadata ?? null;
   const error: string | null = queryError instanceof Error ? queryError.message : queryError ? "Failed to fetch clues" : null;
 
   useEffect(() => {

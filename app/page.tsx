@@ -42,6 +42,11 @@ export default function GameArcade() {
   const [searchQuery, setSearchQuery] = useState("")
   const [activeTab, setActiveTab] = useState<"leaderboard" | "none">("none")
 
+  const { data: hunts = [], isLoading: isLoadingHunts } = useQuery({
+    queryKey: ["activeHunts"],
+    queryFn: async () => fetchAllHunts(),
+  })
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search)
@@ -51,12 +56,7 @@ export default function GameArcade() {
     }
   }, [])
 
-  const { data: hunts = [], isLoading: isLoadingHunts } = useQuery({
-    queryKey: ["activeHunts"],
-    queryFn: fetchAllHunts,
-  })
-
-  const handleWalletSelect = () => {
+  const handleWalletSelect = (wallet: WalletOption) => {
     setIsConnectingWallet(true)
     // Simulate wallet address generation
     setWalletAddress("0xe5f...E5")
