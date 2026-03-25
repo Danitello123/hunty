@@ -11,6 +11,7 @@ export interface StoredHunt {
   description: string
   cluesCount: number
   status: HuntStatus
+  rewardType: 'XLM' | 'NFT' | 'Both'
   /** Unix timestamp in seconds — when the hunt starts. */
   startTime?: number
   /** Unix timestamp in seconds — when the hunt ends. */
@@ -42,6 +43,7 @@ const SEED_HUNTS: StoredHunt[] = [
     description: "Race across town to uncover hidden murals and landmarks.",
     cluesCount: 5,
     status: "Active",
+    rewardType: "XLM",
     startTime: NOW_SECONDS - 86400,
     endTime: NOW_SECONDS + 7 * 86400,
   },
@@ -51,6 +53,7 @@ const SEED_HUNTS: StoredHunt[] = [
     description: "Solve riddles scattered around campus before the timer ends.",
     cluesCount: 7,
     status: "Active",
+    rewardType: "NFT",
     startTime: NOW_SECONDS - 2 * 86400,
     endTime: NOW_SECONDS + 3 * 86400,
   },
@@ -60,6 +63,7 @@ const SEED_HUNTS: StoredHunt[] = [
     description: "A playful intro game for new teammates around the office.",
     cluesCount: 4,
     status: "Completed",
+    rewardType: "Both",
     startTime: NOW_SECONDS - 10 * 86400,
     endTime: NOW_SECONDS - 5 * 86400,
   },
@@ -69,6 +73,7 @@ const SEED_HUNTS: StoredHunt[] = [
     description: "Find hidden clues in the park.",
     cluesCount: 3,
     status: "Draft",
+    rewardType: "XLM",
   },
   {
     id: 5,
@@ -76,6 +81,7 @@ const SEED_HUNTS: StoredHunt[] = [
     description: "Discover art and history through clues.",
     cluesCount: 0,
     status: "Draft",
+    rewardType: "NFT",
   },
 ]
 
@@ -131,6 +137,11 @@ export function getCreatorHunts(): StoredHunt[] {
   return readHunts()
 }
 
+/** Get hunts by creator public key (mock implementation) */
+export function getHuntsByCreator(publicKey: string): StoredHunt[] {
+  return readHunts()
+}
+
 /** Update a hunt's status (e.g. Draft → Active after activate_hunt). */
 export function updateHuntStatus(huntId: number, status: HuntStatus): void {
   const hunts = readHunts().map((h) => (h.id === huntId ? { ...h, status } : h))
@@ -170,7 +181,12 @@ export function saveClueLocally(clue: Omit<Clue, "id">): void {
   writeHunts(hunts)
 }
 
-/** Get a single hunt */
+/** Get a single hunt by numeric ID */
+export function getHuntById(id: number) {
+  return readHunts().find((h) => h.id === id)
+}
+
+/** Get a single hunt by string ID */
 export const getHunt = (id: string) => {
   return readHunts().find((c) => c.id === Number(id))
 }
