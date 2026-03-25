@@ -109,6 +109,19 @@ export function PlayGame({
     if (clueIndex < hunts.length - 1) {
       setCurrentCardIndex(clueIndex + 1);
     } else {
+      // Hunt completed! Trigger notification if enabled
+      if (huntId && huntMetadata?.emailNotifications && huntMetadata?.creatorEmail) {
+        fetch("/api/notifications/complete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            huntId,
+            huntName: gameName,
+            creatorEmail: huntMetadata.creatorEmail,
+            completionTime: new Date().toLocaleString(),
+          }),
+        }).catch((err) => console.error("Failed to send notification:", err));
+      }
       onGameComplete();
     }
   };

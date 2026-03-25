@@ -320,7 +320,7 @@ export default function GameArcade() {
                 walletOptions.map((wallet) => (
                   <Button
                     key={wallet.id}
-                    onClick={() => handleWalletSelect(wallet)}
+                    onClick={() => handleWalletSelect()}
                     className="w-full bg-[#0C0C4F] hover:bg-slate-700 text-white p-4 rounded-lg flex items-center gap-3 justify-start px-6 py-6"
                   >
                     <span className="text-xl">{wallet.icon}</span>
