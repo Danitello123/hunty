@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -38,10 +39,13 @@ export default function GameArcade() {
   const [walletAddress, setWalletAddress] = useState("")
   const [balance, setBalance] = useState("")
 
-  const [hunts, setHunts] = useState<ReturnType<typeof fetchAllHunts>>([])
-  const [isLoadingHunts, setIsLoadingHunts] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [activeTab, setActiveTab] = useState<"leaderboard" | "none">("none")
+
+  const { data: hunts = [], isLoading: isLoadingHunts } = useQuery({
+    queryKey: ["activeHunts"],
+    queryFn: async () => fetchAllHunts(),
+  })
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -49,18 +53,6 @@ export default function GameArcade() {
       if (params.get("tab") === "leaderboard") {
         setActiveTab("leaderboard")
       }
-    }
-  }, [])
-
-  useEffect(() => {
-    let cancelled = false
-    try {
-      const active = fetchAllHunts()
-      if (!cancelled) setHunts(active)
-    } catch (error) {
-      console.error("Failed to fetch hunts", error)
-    } finally {
-      if (!cancelled) setIsLoadingHunts(false)
     }
   }, [])
 
