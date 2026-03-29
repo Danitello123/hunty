@@ -59,12 +59,8 @@ export default function CreateGame() {
   ]);
   const [rewards, setRewards] = useState<Reward[]>([]);
   const [gameName, setGameName] = useState("Hunty");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [timer, setTimer] = useState({ minutes: 0, seconds: 15 });
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [endTime, setEndTime] = useState("00:00 AM");
   const [showPublishModal, setShowPublishModal] = useState(false);
   const [showGameCompleteModal, setShowGameCompleteModal] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
