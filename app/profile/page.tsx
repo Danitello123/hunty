@@ -1,13 +1,14 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import Image from "next/image"
 import { formatISOString } from "@/lib/dateUtils"
 
 import { Header } from "@/components/Header"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useFreighterWallet, shortenAddress } from "@/hooks/useFreighterWallet"
+import { NftGallery } from "@/components/NftGallery"
+import type { NftRewardDetail } from "@/components/NftDetailModal"
 
 type HuntProgressStatus = "Completed" | "In-Progress"
 
@@ -24,13 +25,7 @@ interface PlayerHuntProgress {
 
 // Temporary data fetcher; replace with real Soroban/indexer integration calling
 // `get_player_progress` for the connected player's address.
-interface NftReward {
-  id: number
-  name: string
-  imageUri: string
-  earnedAt: string
-  claimed: boolean
-}
+type NftReward = NftRewardDetail
 
 async function fetchPlayerHunts(address: string): Promise<PlayerHuntProgress[]> {
   // In a real implementation this would:
@@ -81,17 +76,42 @@ async function fetchPlayerRewards(address: string): Promise<NftReward[]> {
     {
       id: 1,
       name: "Golden Compass",
+      description: "A legendary artifact awarded to those who uncover all secret murals in the City Secrets hunt.",
       imageUri: "/static-images/nft1.png",
       earnedAt: "2026-02-10T15:16:00Z",
       claimed: true,
+      huntName: "City Secrets",
+      attributes: [
+        { trait_type: "Rarity", value: "Legendary" },
+        { trait_type: "Type", value: "Utility" },
+      ]
     },
     {
       id: 2,
       name: "Explorer Trophy",
+      description: "Granted for successfully completing the Office Onboarding challenge within the time limit.",
       imageUri: "/static-images/nft2.png",
       earnedAt: "2026-02-20T11:26:00Z",
       claimed: false,
+      huntName: "Office Onboarding",
+      attributes: [
+        { trait_type: "Rarity", value: "Rare" },
+        { trait_type: "Level", value: 5 },
+      ]
     },
+    {
+      id: 3,
+      name: "Soroban Sage",
+      description: "Awarded to players who demonstrate exceptional knowledge of smart contract riddles.",
+      imageUri: "ipfs://QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG", // Example IPFS
+      earnedAt: "2026-03-05T09:45:00Z",
+      claimed: true,
+      huntName: "Stellar Developer Hunt",
+      attributes: [
+        { trait_type: "Rarity", value: "Epic" },
+        { trait_type: "Skill", value: "Contracting" },
+      ]
+    }
   ]
 }
 
@@ -255,36 +275,19 @@ export default function UserProfilePage() {
             </section>
 
             <section aria-label="NFT Rewards" className="mt-8">
-              <div className="flex items-center justify-between gap-2 mb-3">
-                <h2 className="text-xl md:text-2xl font-semibold bg-linear-to-b from-[#3737A4] to-[#0C0C4F] bg-clip-text text-transparent">
-                  NFT Rewards
-                </h2>
-                <span className="text-sm text-slate-500">Earned: {nftRewards.length}</span>
+              <div className="flex items-center justify-between gap-2 mb-6">
+                <div>
+                  <h2 className="text-xl md:text-2xl font-bold bg-linear-to-b from-[#3737A4] to-[#0C0C4F] bg-clip-text text-transparent">
+                    Digital Trophies
+                  </h2>
+                  <p className="text-xs text-slate-500 mt-1">Collectible rewards earned through your achievements</p>
+                </div>
+                <span className="bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full text-xs font-bold">
+                  {nftRewards.length} Unlocked
+                </span>
               </div>
-              {nftRewards.length === 0 ? (
-                <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50/80 py-8 text-center text-slate-600">
-                  No NFT rewards earned yet. Complete more hunts to unlock collectible badges.
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {nftRewards.map((nft) => (
-                    <Card key={nft.id} className="border border-slate-200 bg-white/80">
-                      <CardHeader>
-                        <CardTitle className="text-sm font-semibold text-slate-900">{nft.name}</CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-2">
-                        <div className="aspect-square w-full rounded-xl overflow-hidden bg-slate-100 flex items-center justify-center">
-                          <Image src={nft.imageUri} alt={nft.name} width={80} height={80} />
-                        </div>
-                        <p className="text-xs text-slate-500">Earned on {formatISOString(nft.earnedAt)}</p>
-                        <span className={`px-2 py-1 text-[11px] rounded-full ${nft.claimed ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}>
-                          {nft.claimed ? "Claimed" : "Unclaimed"}
-                        </span>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              )}
+              
+              <NftGallery nfts={nftRewards} />
             </section>
 
             <section aria-label="Hunt history" className="mt-10 space-y-8">
